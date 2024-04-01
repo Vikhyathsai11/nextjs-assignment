@@ -1,25 +1,19 @@
 "use client";
-import { useState } from 'react';
 
-const Register = () => {
-  // State to store form data
+import { useState } from 'react';
+import axios from 'axios';
+// import {axios }  from 'axios';
+
+function PatientForm() {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     age: '',
-    // Add more fields as needed
+    email: '',
+    phoneNumber: ''
   });
 
-  // State to manage form validation errors
-  const [errors, setErrors] = useState({
-    firstName: '',
-    lastName: '',
-    age: '',
-    // Add more fields as needed
-  });
-
-  // Function to handle form input change
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = e => {
     const { name, value } = e.target;
     setFormData(prevState => ({
       ...prevState,
@@ -27,55 +21,44 @@ const Register = () => {
     }));
   };
 
-  // Function to handle form submission
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Perform validation
-    const validationErrors: any = {};
-    if (!formData.firstName) {
-      validationErrors.firstName = 'First name is required';
-    }
-    if (!formData.lastName) {
-      validationErrors.lastName = 'Last name is required';
-    }
-    if (!formData.age) {
-      validationErrors.age = 'Age is required';
-    }
-
-
-    // if (Object.keys(validationErrors).length > 0) {
-    //   setErrors(validationErrors);
-    //   return;
-    // }
-
     console.log(formData);
+    await axios.post('http://localhost:3002/api/submitform', formData);
+      console.log('Form data sent successfully');
   };
 
   return (
-    <div>
-      <h1>Register Patient</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="firstName">First Name:</label>
-          <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleInputChange} />
-          {errors.firstName && <span className="text-red-500">{errors.firstName}</span>}
-        </div>
-        <div>
-          <label htmlFor="lastName">Last Name:</label>
-          <input type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleInputChange} />
-          {errors.lastName && <span className="text-red-500">{errors.lastName}</span>}
-        </div>
-        <div>
-          <label htmlFor="age">Age:</label>
-          <input type="text" id="age" name="age" value={formData.age} onChange={handleInputChange} />
-          {errors.age && <span className="text-red-500">{errors.age}</span>}
-        </div>
-        {/* Add more fields as needed */}
-        <button type="submit">Submit</button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <div className="mb-4">
+        <label className="block text-gray-1200">First Name:</label>
+        <input type="text" name="firstName" value={formData.firstName} onChange={handleChange}
+          className="mt-1 p-2 block w-half border rounded-md focus:outline-none focus:border-blue-500 text-black" />
+      </div>
+      <div>
+        <label className="block text-gray-1200">Last Name:</label>
+        <input type="text" name="lastName" value={formData.lastName} onChange={handleChange}
+          className="m-1 p-2 block w-half border rounded-md focus:outline-none focus:border-blue-500 text-black" />
+      </div>
+      <div>
+        <label className="block text-gray-1200">Age:</label>
+        <input type="number" name="age" value={formData.age} onChange={handleChange}
+          className="m-1 p-2 block w-half border rounded-md focus:outline-none focus:border-blue-500 text-black" />
+      </div>
+      <div>
+        <label className="block text-gray-1200">Email:</label>
+        <input type="email" name="email" value={formData.email} onChange={handleChange}
+          className="m-1 p-2 block w-half border rounded-md focus:outline-none focus:border-blue-500 text-black" />
+      </div>
+      <div>
+        <label className="block text-gray-1200">Phone Number:</label>
+        <input type="tel" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange}
+          className="m-1 p-2 block w-half border rounded-md focus:outline-none focus:border-blue-500 text-black" />
+      </div>
+      <button type="submit"
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Submit</button>
+    </form>
   );
-};
+}
 
-export default Register;
+export default PatientForm;
